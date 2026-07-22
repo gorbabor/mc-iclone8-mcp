@@ -72,6 +72,28 @@ Le serveur fournit des outils MCP pour :
 Le plugin cible iClone 8. Il écarte volontairement les API propres à iClone 7,
 dont les motion bones supprimés dans iClone 8.
 
+## Exemples d’instructions pour un agent
+
+Donner un objectif clair, les noms des objets et des valeurs numériques. L’agent
+peut d’abord inspecter la scène, puis appeler les outils MCP adaptés.
+
+| Catégorie | Instruction illustrative |
+| --- | --- |
+| Scène | « Liste les props de la scène, puis sélectionne `MCP8_Live_Test_Box`. » |
+| Création | « Crée une boîte rouge nommée `Logo_Block` à X=0, Y=0, Z=20 et ajoute un sol sous elle. » |
+| Transformation | « Déplace `Logo_Block` à X=200 à la frame 120 et règle son échelle à 150 %. » |
+| Matériaux | « Liste les matériaux de `Logo_Block`, puis mets le matériau 0 en bleu roi et masque sa texture diffuse. » |
+| Timeline | « Place la tête de lecture à la frame 0, lis les frames 0 à 300, puis arrête la lecture. » |
+| Caméra | « Lis la focale de la caméra active et règle-la à 50 mm. » |
+| Animation | « Anime `Orbit_Sphere` autour de `Center_Cube` avec des clés de transformation aux frames 0, 150, 300, 450 et 600. » |
+| Avatar | « Liste les os de skin et les clips d’animation de l’avatar `Character1`. » |
+| Morphs | « Liste les morphs de `Character1`, puis règle le morph facial indiqué au poids 0,5 à la frame courante. » |
+| Import/export | « Importe ce fichier `.iProp`, sauvegarde le projet, puis exporte l’objet sélectionné en FBX. » |
+
+Pour un plan où la caméra suit un sujet, utiliser une vraie caméra de scène —
+pas la Preview Camera : « Crée ou active `Camera1`, puis pose ses clés de
+transformation aux mêmes frames que le sujet, avec un décalage relatif constant. »
+
 ## Développement
 
 ```powershell

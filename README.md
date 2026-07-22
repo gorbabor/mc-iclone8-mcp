@@ -70,6 +70,28 @@ The server exposes MCP tools to:
 The plugin targets iClone 8. It intentionally avoids iClone 7-only APIs,
 including the motion-bone APIs removed in iClone 8.
 
+## Example instructions for an agent
+
+Give the agent a clear objective, object names, and numeric values. The agent
+can inspect the scene first and then call the appropriate MCP tools.
+
+| Category | Example instruction |
+| --- | --- |
+| Scene | “List the props in the scene, then select `MCP8_Live_Test_Box`.” |
+| Creation | “Create a red box named `Logo_Block` at X=0, Y=0, Z=20, and add a floor beneath it.” |
+| Transform | “Move `Logo_Block` to X=200 at frame 120 and scale it to 150%.” |
+| Materials | “List the materials on `Logo_Block`, then set material 0 to royal blue and hide its diffuse texture.” |
+| Timeline | “Set the playhead to frame 0, play frames 0 through 300, then stop.” |
+| Camera | “Read the active camera's focal length and set it to 50 mm.” |
+| Animation | “Animate `Orbit_Sphere` around `Center_Cube` using transform keys at frames 0, 150, 300, 450, and 600.” |
+| Avatar | “List the skin bones and animation clips on avatar `Character1`.” |
+| Morphs | “List the morphs on `Character1`, then set the specified facial morph to weight 0.5 at the current frame.” |
+| Import/export | “Import this `.iProp` file, save the project, then export the selected object as FBX.” |
+
+For a camera follow shot, use a real scene camera rather than the iClone
+Preview Camera: “Create or activate `Camera1`, then key its transform at the
+same frames as the subject, with a consistent relative offset.”
+
 ## Development
 
 ```powershell
