@@ -2,7 +2,8 @@ import RLPy
 
 
 def _frame(time, fps):
-    return time.GetFrameIndex(fps)
+    # In RLPy this is a static RTime conversion, not an RTime instance method.
+    return RLPy.RTime.GetFrameIndex(time, fps)
 
 
 def get_timeline(_args):
