@@ -1,5 +1,7 @@
 import RLPy
 
+from tools.objects import _SEARCH_TYPES
+
 
 def _frame(time, fps):
     return fps.GetFrameIndex(time)
@@ -56,9 +58,28 @@ def stop(_args):
     return get_timeline({})
 
 
+def clear_scene_animations(args):
+    if args.get("confirm") != "DELETE_ALL_SCENE_ANIMATIONS":
+        raise ValueError("confirm must be DELETE_ALL_SCENE_ANIMATIONS")
+    RLPy.RGlobal.Stop()
+    objects, seen, failed = [], set(), []
+    for object_type in _SEARCH_TYPES:
+        for obj in RLPy.RScene.FindObjects(object_type):
+            if obj.GetID() in seen:
+                continue
+            seen.add(obj.GetID())
+            if RLPy.RGlobal.RemoveAllAnimations(obj) == RLPy.RStatus.Success:
+                objects.append(obj.GetName())
+            else:
+                failed.append(obj.GetName())
+    RLPy.RGlobal.SetTime(RLPy.RGlobal.GetStartTime())
+    return {"status": "ok", "cleared_objects": objects, "failed_objects": failed}
+
+
 def register(registry):
     registry["get_timeline"] = {"handler": get_timeline, "main_thread": True, "description": "Retourne FPS, lecture et bornes de la timeline.", "inputSchema": {"type": "object", "properties": {}}}
     registry["set_timeline"] = {"handler": set_timeline, "main_thread": True, "description": "Place la tête de lecture par frame ou millisecondes.", "inputSchema": {"type": "object", "properties": {"frame": {"type": "integer"}, "milliseconds": {"type": "integer"}}}}
     registry["play_timeline"] = {"handler": play, "main_thread": True, "description": "Lance la lecture de la timeline.", "inputSchema": {"type": "object", "properties": {"start_frame": {"type": "integer"}, "end_frame": {"type": "integer"}}}}
     registry["pause_timeline"] = {"handler": pause, "main_thread": True, "description": "Met la timeline en pause.", "inputSchema": {"type": "object", "properties": {}}}
     registry["stop_timeline"] = {"handler": stop, "main_thread": True, "description": "Arrête la timeline.", "inputSchema": {"type": "object", "properties": {}}}
+    registry["clear_scene_animations"] = {"handler": clear_scene_animations, "main_thread": True, "description": "Supprime toutes les animations des objets pris en charge dans la scène. Action destructive.", "inputSchema": {"type": "object", "properties": {"confirm": {"type": "string", "enum": ["DELETE_ALL_SCENE_ANIMATIONS"]}}, "required": ["confirm"]}}

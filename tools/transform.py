@@ -26,13 +26,14 @@ def set_transform(args):
         scale = RLPy.RVector3(value.get("x", scale.x), value.get("y", scale.y), value.get("z", scale.z))
     if "rotation_degrees" in args:
         value = args["rotation_degrees"]
-        rotation = RLPy.RQuaternion()
-        rotation.FromEulerAngle(
+        matrix = RLPy.RMatrix3().FromEulerAngle(
             RLPy.EEulerOrder_XYZ,
             math.radians(value.get("x", 0)),
             math.radians(value.get("y", 0)),
             math.radians(value.get("z", 0)),
         )
+        rotation = RLPy.RQuaternion()
+        rotation.FromRotationMatrix(matrix)
     obj.GetControl("Transform").SetValue(RLPy.RGlobal.GetTime(), RLPy.RTransform(scale, rotation, pos))
     return get_transform({"name": obj.GetName()})
 
