@@ -2,9 +2,9 @@ import RLPy
 
 
 def _frame(time, fps):
-    # Some iClone 8 RLPy builds do not expose the documented GetFrameIndex
-    # helper. RTime reliably converts to milliseconds, so derive the frame.
-    milliseconds = time.AsUnits(RLPy.kMilliseconds)
+    # The bundled RLPy binding exposes GetTime() in milliseconds, while some
+    # documented RTime conversion helpers are absent from this build.
+    milliseconds = time.GetTime()
     return int(round(milliseconds * float(fps) / 1000.0))
 
 
