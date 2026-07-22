@@ -69,7 +69,8 @@ def import_asset(args):
 def get_project_info(_args):
     fps = RLPy.RGlobal.GetFps()
     end = RLPy.RGlobal.GetEndTime()
-    return {"fps": fps, "end_frame": RLPy.RTime.GetFrameIndex(end, fps), "object_count": len(RLPy.RScene.FindObjects(RLPy.EObjectType_Object))}
+    end_frame = int(round(end.AsUnits(RLPy.kMilliseconds) * float(fps) / 1000.0))
+    return {"fps": fps, "end_frame": end_frame, "object_count": len(RLPy.RScene.FindObjects(RLPy.EObjectType_Object))}
 
 
 def load_motion(args):
