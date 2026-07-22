@@ -63,9 +63,11 @@ The server exposes MCP tools to:
 - inspect, select, transform, show, and remove scene objects;
 - create official iClone primitives, import assets, and save projects;
 - control the timeline, cameras, and lights;
-- inspect and change materials and colors;
-- inspect skin bones, animation clips, and morphs;
-- load motions and export a single object as FBX.
+- inspect and change materials, colors, texture maps, opacity, glossiness, and self-illumination;
+- inspect avatar components, skin bones, animation clips, loop counts, and morphs;
+- load or pre-load motions, apply Substance Painter texture folders, and export a single object as FBX;
+- inspect the current render size and start a render only after explicit confirmation;
+- inspect iClone mocap state and native TCP/UDP availability without opening external connections.
 
 The plugin targets iClone 8. It intentionally avoids iClone 7-only APIs,
 including the motion-bone APIs removed in iClone 8.
@@ -81,12 +83,17 @@ can inspect the scene first and then call the appropriate MCP tools.
 | Creation | “Create a red box named `Logo_Block` at X=0, Y=0, Z=20, and add a floor beneath it.” |
 | Transform | “Move `Logo_Block` to X=200 at frame 120 and scale it to 150%.” |
 | Materials | “List the materials on `Logo_Block`, then set material 0 to royal blue and hide its diffuse texture.” |
+| Texture maps | “Apply `C:\\Assets\\logo_basecolor.png` as the diffuse texture of material 0 on `Logo_Block`.” |
+| Material animation | “At frame 300, set `Logo_Block` material 0 opacity to 0.25 and self-illumination to 0.8.” |
 | Timeline | “Set the playhead to frame 0, play frames 0 through 300, then stop.” |
 | Camera | “Read the active camera's focal length and set it to 50 mm.” |
 | Animation | “Animate `Orbit_Sphere` around `Center_Cube` using transform keys at frames 0, 150, 300, 450, and 600.” |
 | Avatar | “List the skin bones and animation clips on avatar `Character1`.” |
+| Avatar playback | “Inspect `Character1` capabilities, then set clip 0 to loop three times at 1.2× speed.” |
 | Morphs | “List the morphs on `Character1`, then set the specified facial morph to weight 0.5 at the current frame.” |
 | Import/export | “Import this `.iProp` file, save the project, then export the selected object as FBX.” |
+| Render | “Read the render dimensions. Only when I confirm, render the video using the project’s current iClone settings.” |
+| Mocap | “Check whether iClone mocap is running; do not change or connect any device.” |
 
 For a camera follow shot, use a real scene camera rather than the iClone
 Preview Camera: “Create or activate `Camera1`, then key its transform at the

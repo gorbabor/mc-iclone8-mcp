@@ -65,9 +65,11 @@ Le serveur fournit des outils MCP pour :
 - créer les primitives officielles d’iClone, importer des assets et sauvegarder
   les projets ;
 - piloter la timeline, les caméras et les éclairages ;
-- lire et modifier les matériaux et les couleurs ;
-- inspecter les os de skin, les clips et les morphs ;
-- charger des motions et exporter un objet en FBX.
+- lire et modifier les matériaux, les couleurs, les textures, l’opacité, la brillance et l’auto-illumination ;
+- inspecter les composants d’avatar, les os de skin, les clips, leurs boucles et les morphs ;
+- charger ou précharger des motions, appliquer des dossiers de textures Substance Painter et exporter un objet en FBX ;
+- lire la taille de rendu et lancer le rendu uniquement après confirmation explicite ;
+- diagnostiquer l’état mocap et la disponibilité TCP/UDP native sans ouvrir de connexion externe.
 
 Le plugin cible iClone 8. Il écarte volontairement les API propres à iClone 7,
 dont les motion bones supprimés dans iClone 8.
@@ -83,12 +85,17 @@ peut d’abord inspecter la scène, puis appeler les outils MCP adaptés.
 | Création | « Crée une boîte rouge nommée `Logo_Block` à X=0, Y=0, Z=20 et ajoute un sol sous elle. » |
 | Transformation | « Déplace `Logo_Block` à X=200 à la frame 120 et règle son échelle à 150 %. » |
 | Matériaux | « Liste les matériaux de `Logo_Block`, puis mets le matériau 0 en bleu roi et masque sa texture diffuse. » |
+| Cartes de texture | « Applique `C:\\Assets\\logo_basecolor.png` comme texture diffuse du matériau 0 de `Logo_Block`. » |
+| Animation matériau | « À la frame 300, règle l’opacité du matériau 0 de `Logo_Block` à 0,25 et son auto-illumination à 0,8. » |
 | Timeline | « Place la tête de lecture à la frame 0, lis les frames 0 à 300, puis arrête la lecture. » |
 | Caméra | « Lis la focale de la caméra active et règle-la à 50 mm. » |
 | Animation | « Anime `Orbit_Sphere` autour de `Center_Cube` avec des clés de transformation aux frames 0, 150, 300, 450 et 600. » |
 | Avatar | « Liste les os de skin et les clips d’animation de l’avatar `Character1`. » |
+| Lecture avatar | « Inspecte les capacités de `Character1`, puis règle le clip 0 pour trois boucles à la vitesse 1,2. » |
 | Morphs | « Liste les morphs de `Character1`, puis règle le morph facial indiqué au poids 0,5 à la frame courante. » |
 | Import/export | « Importe ce fichier `.iProp`, sauvegarde le projet, puis exporte l’objet sélectionné en FBX. » |
+| Rendu | « Lis les dimensions de rendu. Seulement après ma confirmation, rends la vidéo avec les réglages actuels du projet iClone. » |
+| Mocap | « Vérifie si la mocap iClone est active ; ne modifie ni ne connecte aucun appareil. » |
 
 Pour un plan où la caméra suit un sujet, utiliser une vraie caméra de scène —
 pas la Preview Camera : « Crée ou active `Camera1`, puis pose ses clés de
