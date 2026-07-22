@@ -11,11 +11,13 @@ def _ping(_args):
 
 def _runtime_diagnostics(_args):
     time = RLPy.RGlobal.GetTime()
+    fps = RLPy.RGlobal.GetFps()
     public = lambda value: sorted(name for name in dir(value) if not name.startswith("_"))
     return {
         "rtime_class_members": public(RLPy.RTime),
         "current_time_members": public(time),
-        "fps": RLPy.RGlobal.GetFps(),
+        "fps_repr": repr(fps),
+        "fps_members": public(fps),
         "time_repr": repr(time),
     }
 
