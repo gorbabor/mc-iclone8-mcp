@@ -1,0 +1,4 @@
+{
+  "server": {"host": "127.0.0.1", "port": 8766},
+  "plugin": {"name": "mc-iclone8-mcp", "application": "iClone", "minimum_version": "8.0"}
+}

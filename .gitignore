@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+
+# Local editor and operating-system data
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+
+# Local iClone logs and generated output
+*.log
+output/
