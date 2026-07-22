@@ -34,8 +34,8 @@ def _tool_registry():
     # Reload tool modules when the server starts. iClone keeps Python modules in
     # memory after a stop/start cycle, while a developer may have updated them
     # on disk. This makes the Start button load the current plugin code.
-    from tools import avatar, camera, core, lights, materials, morphs, objects, project, scene, timeline, transform
-    for module in (objects, core, scene, project, transform, materials, timeline, camera, lights, avatar, morphs):
+    from tools import avatar, camera, core, lights, materials, morphs, objects, project, render, scene, timeline, transform
+    for module in (objects, core, scene, project, transform, materials, render, timeline, camera, lights, avatar, morphs):
         importlib.reload(module)
     tools = {}
     core.register(tools)
@@ -43,6 +43,7 @@ def _tool_registry():
     project.register(tools)
     transform.register(tools)
     materials.register(tools)
+    render.register(tools)
     timeline.register(tools)
     camera.register(tools)
     lights.register(tools)
