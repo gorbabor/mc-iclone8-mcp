@@ -85,6 +85,31 @@ def load_motion(args):
     return {"status": "ok", "name": obj.GetName(), "path": path, "start_frame": args.get("start_frame", 0)}
 
 
+def preload_motion(args):
+    path = args["path"]
+    if not os.path.isfile(path):
+        raise FileNotFoundError("Motion file not found: %s" % path)
+    obj = find_by_name(args["name"])
+    result = RLPy.RFileIO.PreLoadMotion(path, obj)
+    if result != RLPy.RStatus.Success:
+        raise RuntimeError("iClone could not pre-load the motion")
+    return {"status": "ok", "name": obj.GetName(), "path": path}
+
+
+def load_substance_painter_textures(args):
+    path = args["path"]
+    if not os.path.isdir(path):
+        raise FileNotFoundError("Texture folder not found: %s" % path)
+    obj = find_by_name(args["name"])
+    method = getattr(RLPy.RFileIO, "LoadSubstancePainterTextures", None)
+    if method is None:
+        raise RuntimeError("This iClone installation does not expose Substance Painter texture loading")
+    result = method(obj, path)
+    if result != RLPy.RStatus.Success:
+        raise RuntimeError("iClone could not load the Substance Painter textures")
+    return {"status": "ok", "name": obj.GetName(), "path": path}
+
+
 def export_fbx(args):
     path = args["path"]
     parent = os.path.dirname(os.path.abspath(path))
@@ -116,4 +141,6 @@ def register(registry):
     registry["import_asset"] = {"handler": import_asset, "main_thread": True, "description": "Importe un fichier pris en charge par iClone (.iProp, .iAvatar, .fbx, etc.).", "inputSchema": {"type": "object", "properties": {"path": {"type": "string"}}, "required": ["path"]}}
     registry["get_project_info"] = {"handler": get_project_info, "main_thread": True, "description": "Retourne les informations du projet courant.", "inputSchema": {"type": "object", "properties": {}}}
     registry["load_motion"] = {"handler": load_motion, "main_thread": True, "description": "Charge un fichier de motion iClone sur un avatar ou prop à une frame donnée.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}, "path": {"type": "string"}, "start_frame": {"type": "integer", "minimum": 0}}, "required": ["name", "path"]}}
+    registry["preload_motion"] = {"handler": preload_motion, "main_thread": True, "description": "Précharge un fichier de motion pour accélérer son application ultérieure à un avatar ou prop.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}, "path": {"type": "string"}}, "required": ["name", "path"]}}
+    registry["load_substance_painter_textures"] = {"handler": load_substance_painter_textures, "main_thread": True, "description": "Charge sur un objet les textures exportées depuis Substance Painter, depuis un dossier local.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}, "path": {"type": "string"}}, "required": ["name", "path"]}}
     registry["export_fbx"] = {"handler": export_fbx, "main_thread": True, "description": "Exporte un seul objet en FBX avec les réglages iClone documentés.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}, "path": {"type": "string"}, "include_motion_path": {"type": "string"}}, "required": ["path"]}}
