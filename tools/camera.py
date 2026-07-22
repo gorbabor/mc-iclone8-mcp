@@ -26,6 +26,15 @@ def set_camera(args):
     return get_camera({"name": camera.GetName()})
 
 
+def set_current_camera(args):
+    camera = _find(args["name"])
+    result = RLPy.RScene.SetCurrentCamera(camera)
+    if result is not None and result != RLPy.RStatus.Success:
+        raise RuntimeError("iClone could not activate camera")
+    return {"status": "ok", "name": camera.GetName()}
+
+
 def register(registry):
     registry["get_camera"] = {"handler": get_camera, "main_thread": True, "description": "Lit les paramètres de la caméra active ou nommée.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}}}}
     registry["set_camera"] = {"handler": set_camera, "main_thread": True, "description": "Modifie focale et plans de clipping d'une caméra.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}, "focal_length": {"type": "number"}, "near_clipping_plane": {"type": "number"}, "far_clipping_plane": {"type": "number"}}}}
+    registry["set_current_camera"] = {"handler": set_current_camera, "main_thread": True, "description": "Active une caméra de scène pour le viewport et le rendu.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}}, "required": ["name"]}}
