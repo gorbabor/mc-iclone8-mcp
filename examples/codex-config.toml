@@ -1,0 +1,7 @@
+# Add this section to %USERPROFILE%\\.codex\\config.toml.
+# Start mc-iclone8-mcp from iClone 8 before opening a new Codex task.
+
+[mcp_servers.mc-iclone8-mcp]
+url = "http://127.0.0.1:8766/mcp"
+startup_timeout_sec = 15
+tool_timeout_sec = 60
