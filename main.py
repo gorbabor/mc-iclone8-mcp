@@ -1,4 +1,5 @@
 import json
+import importlib
 import os
 import threading
 
@@ -30,8 +31,12 @@ def _config():
 
 
 def _tool_registry():
-    # Features are registered in small, auditable modules as they are validated.
-    from tools import avatar, camera, core, lights, materials, morphs, project, scene, timeline, transform
+    # Reload tool modules when the server starts. iClone keeps Python modules in
+    # memory after a stop/start cycle, while a developer may have updated them
+    # on disk. This makes the Start button load the current plugin code.
+    from tools import avatar, camera, core, lights, materials, morphs, objects, project, scene, timeline, transform
+    for module in (objects, core, scene, project, transform, materials, timeline, camera, lights, avatar, morphs):
+        importlib.reload(module)
     tools = {}
     core.register(tools)
     scene.register(tools)
