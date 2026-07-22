@@ -69,8 +69,8 @@ def import_asset(args):
 def get_project_info(_args):
     fps = RLPy.RGlobal.GetFps()
     end = RLPy.RGlobal.GetEndTime()
-    end_frame = int(round(end.GetTime() * float(fps) / 1000.0))
-    return {"fps": fps, "end_frame": end_frame, "object_count": len(RLPy.RScene.FindObjects(RLPy.EObjectType_Object))}
+    end_frame = fps.GetFrameIndex(end)
+    return {"fps": fps.ToFloat(), "end_frame": end_frame, "object_count": len(RLPy.RScene.FindObjects(RLPy.EObjectType_Object))}
 
 
 def load_motion(args):
@@ -78,7 +78,7 @@ def load_motion(args):
     if not os.path.isfile(path):
         raise FileNotFoundError("Motion file not found: %s" % path)
     obj = find_by_name(args["name"])
-    time = RLPy.RTime.IndexedFrameTime(args.get("start_frame", 0), RLPy.RGlobal.GetFps())
+    time = RLPy.RGlobal.GetFps().IndexedFrameTime(args.get("start_frame", 0))
     result = RLPy.RFileIO.LoadMotion(path, time, obj)
     if result != RLPy.RStatus.Success:
         raise RuntimeError("iClone could not load the motion onto this object")

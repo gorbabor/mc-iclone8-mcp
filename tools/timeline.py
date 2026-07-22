@@ -2,17 +2,22 @@ import RLPy
 
 
 def _frame(time, fps):
-    # The bundled RLPy binding exposes GetTime() in milliseconds, while some
-    # documented RTime conversion helpers are absent from this build.
-    milliseconds = time.GetTime()
-    return int(round(milliseconds * float(fps) / 1000.0))
+    return fps.GetFrameIndex(time)
+
+
+def _time(frame, fps):
+    return fps.IndexedFrameTime(frame)
+
+
+def _fps_value(fps):
+    return fps.ToFloat()
 
 
 def get_timeline(_args):
     fps = RLPy.RGlobal.GetFps()
     current, start, end = RLPy.RGlobal.GetTime(), RLPy.RGlobal.GetStartTime(), RLPy.RGlobal.GetEndTime()
     return {
-        "fps": fps,
+        "fps": _fps_value(fps),
         "playing": RLPy.RGlobal.IsPlaying(),
         "current_frame": _frame(current, fps),
         "start_frame": _frame(start, fps),
@@ -22,7 +27,7 @@ def get_timeline(_args):
 
 def set_timeline(args):
     if "frame" in args:
-        target = RLPy.RTime.IndexedFrameTime(args["frame"], RLPy.RGlobal.GetFps())
+        target = _time(args["frame"], RLPy.RGlobal.GetFps())
     elif "milliseconds" in args:
         target = RLPy.RTime(args["milliseconds"])
     else:
@@ -35,8 +40,8 @@ def set_timeline(args):
 
 def play(args):
     fps = RLPy.RGlobal.GetFps()
-    start = RLPy.RTime.IndexedFrameTime(args.get("start_frame", _frame(RLPy.RGlobal.GetStartTime(), fps)), fps)
-    end = RLPy.RTime.IndexedFrameTime(args.get("end_frame", _frame(RLPy.RGlobal.GetEndTime(), fps)), fps)
+    start = _time(args.get("start_frame", _frame(RLPy.RGlobal.GetStartTime(), fps)), fps)
+    end = _time(args.get("end_frame", _frame(RLPy.RGlobal.GetEndTime(), fps)), fps)
     RLPy.RGlobal.Play(start, end)
     return {"status": "ok"}
 
