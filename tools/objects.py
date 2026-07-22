@@ -14,6 +14,11 @@ _SEARCH_TYPES = (
 
 
 def find_by_name(name):
+    # The active Preview Camera is not always returned by FindObject, even
+    # though it is a valid camera with a transform control.
+    current_camera = RLPy.RScene.GetCurrentCamera()
+    if current_camera is not None and current_camera.GetName() == name:
+        return current_camera
     for object_type in _SEARCH_TYPES:
         obj = RLPy.RScene.FindObject(object_type, name)
         if obj is not None:
