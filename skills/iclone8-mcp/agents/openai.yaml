@@ -1,0 +1,4 @@
+interface:
+  display_name: "iClone 8 MCP Expert"
+  short_description: "Control iClone 8 reliably through MCP"
+  default_prompt: "Use $iclone8-mcp to plan, execute, and verify this iClone 8 task through MCP."

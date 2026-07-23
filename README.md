@@ -56,6 +56,11 @@ tool_timeout_sec = 60
 An identical ready-to-copy sample is available at
 [`examples/codex-config.toml`](examples/codex-config.toml).
 
+Configuration examples for Claude Code, Pi coding agent, OpenClaw, Hermes, and
+VS Code are collected in [`docs/agent-configs.en.md`](docs/agent-configs.en.md).
+The reusable expert skill is available in
+[`skills/iclone8-mcp`](skills/iclone8-mcp).
+
 ## Available capabilities
 
 Version `v0.1.0` exposes 60 MCP tools:
