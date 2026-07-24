@@ -16,7 +16,8 @@ Use this skill to turn a 3D objective into a deliberate iClone 8 operation. The 
 5. Execute in small stages: create/import, configure, animate, camera, render. Verify each stage with a read tool.
 6. Never claim that a render, animation, or color change succeeded without checking the resulting state.
 7. Use a real scene camera for animation. The iClone Preview Camera cannot be transform-animated.
-8. Keep the MCP server local. Do not expose port 8766 externally or invent TCP/UDP device protocols.
+8. For humanoid movement, prefer native iClone skeletal motions over root-transform displacement.
+9. Keep the MCP server local. Do not expose port 8766 externally or invent TCP/UDP device protocols.
 
 ## Tool selection map
 
@@ -51,6 +52,43 @@ Use this skill to turn a 3D objective into a deliberate iClone 8 operation. The 
 4. Read the timeline and inspect transforms at representative frames.
 5. Play the range only after the keys are verified.
 
+### Animate a humanoid naturally
+
+Use this workflow for conversation, walking, gesturing, reacting, or idle
+behavior. Do not simulate a person talking by moving the avatar root back and
+forth.
+
+1. Verify the target names with `list_objects` using `type: "avatar"`.
+2. Inspect each avatar with `get_avatar_info` and `get_avatar_capabilities`.
+   Require a skeleton and report the available face, viseme, morph, HIK, and
+   physics components. The current MCP does not expose a dedicated Persona
+   object query, so do not claim a Persona was found unless a future tool
+   returns it explicitly.
+3. Inspect existing clips with `get_animation_clips`. Preserve a useful clip
+   when it already contains the requested behavior.
+4. Search the installed iClone asset library for suitable native motions before
+   inventing keys. Prefer these categories and examples:
+   - conversation: `Base Motion\Talk\01_Talk.iMotion`, `02_Talk.iMotion`;
+   - explanation: `01_Explain1.iMotion`, `01_Explain2.iMotion`,
+     `01_Explain3.iMotion`;
+   - disagreement/reaction: `02_Argue 1.iMotion`, `02_Argue 2.iMotion`;
+   - subtle behavior: `Base Motion\Idle\01_Natural.iMotion`,
+     `02_Natural.iMotion`, `01_Look Around.iMotion`.
+5. If earlier experimentation created root transform keys that merely move the
+   avatar, stop the timeline and clear only those keys with
+   `clear_transform_keys` and the required confirmation token. Do this before
+   loading the skeletal motion, and explain the cleanup.
+6. Apply motions with `load_motion` at the requested start frame. Use different
+   but compatible Talk/Explain motions for two speakers when available so they
+   do not mirror each other mechanically.
+7. Use `set_clip_speed` and `set_clip_loop_count` only after checking the clip
+   duration and requested frame range. Do not assume that loop count 0 means
+   infinite playback.
+8. Verify the result with `get_animation_clips` and `get_timeline`, then play the
+   requested range. If only transform tools are available and no suitable
+   motion file exists, clearly label root motion as a fallback, keep it subtle,
+   and do not describe it as arm/hand/body gesture animation.
+
 ### Animate and film with a camera
 
 1. Find a real camera with `list_objects` and check it with `get_camera_capabilities`.
@@ -81,7 +119,7 @@ Rewrite an underspecified user request into this internal structure before calli
 ```text
 OBJECTIVE: one observable final result
 SCENE: objects/assets to create or use, with stable names
-ANIMATION: frame range, key frames, positions/rotations/scales, interpolation
+ANIMATION: frame range, preferred native motion files, clips, key frames only when needed, interpolation
 CAMERA: real camera name, path, target, focal length, DOF, render view
 MATERIALS: object, material index, RGB/texture/channel/value
 OUTPUT: save path, export path, or render request
@@ -105,6 +143,7 @@ Report every tool result and any limitation.
 
 - If `ping_iclone` fails, do not retry scene mutations; ask the user to load the plugin and start the server.
 - If an object or camera is not found, list the scene and use the exact returned name.
+- If a humanoid has no suitable native motion, do not fake conversation with large root translations; report the limitation and use only a subtle fallback if the user accepts it.
 - If a camera transform is not animable, switch to a real scene camera and explain why.
 - If a material color is not visible, inspect materials and override the diffuse texture.
 - If a motion, texture, or FBX path fails, verify the path exists and report the iClone/API limitation.
