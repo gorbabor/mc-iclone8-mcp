@@ -56,9 +56,31 @@ tool_timeout_sec = 60
 An identical ready-to-copy sample is available at
 [`examples/codex-config.toml`](examples/codex-config.toml).
 
+Configuration examples for Claude Code, Pi coding agent, OpenClaw, Hermes, and
+VS Code are collected in [`docs/agent-configs.en.md`](docs/agent-configs.en.md).
+The reusable expert skill is available in
+[`skills/iclone8-mcp`](skills/iclone8-mcp).
+
 ## Available capabilities
 
-The server exposes MCP tools to:
+Version `v0.1.0` exposes 60 MCP tools:
+
+| Category | Tools | What they do |
+| --- | --- | --- |
+| Diagnostics | `ping_iclone`, `get_api_version`, `get_runtime_diagnostics` | Check connectivity, the targeted version, and available RLPy capabilities. |
+| Scene and objects | `list_objects`, `get_selection`, `select_object`, `set_visibility`, `delete_object`, `clone_object`, `link_object`, `unlink_object`, `align_object`, `set_static` | Inspect, select, show/hide, delete, clone, link, unlink, and align objects. |
+| Projects and assets | `create_primitive`, `save_project`, `get_project_info`, `import_asset`, `load_motion`, `preload_motion`, `load_substance_painter_textures`, `export_fbx` | Create primitives, import files, load motions, apply textures, save projects, and export FBX. |
+| Transforms | `get_transform`, `set_transform`, `delete_transform_key`, `move_transform_key`, `set_transform_key_transition`, `clear_transform_keys` | Read and edit object position, rotation, scale, and animation keys. |
+| Timeline | `get_timeline`, `set_timeline`, `play_timeline`, `pause_timeline`, `stop_timeline`, `clear_scene_animations` | Control playback, the playhead, and scene-animation removal. |
+| Cameras | `get_camera`, `get_camera_capabilities`, `set_camera`, `set_camera_transform`, `set_camera_focal_key`, `set_camera_dof`, `set_current_camera`, `set_camera_look_at` | Inspect and animate cameras, set focal length, clipping, depth of field, the active camera, and object tracking. |
+| Materials | `get_materials`, `set_material_color`, `set_material_texture`, `set_material_value` | Inspect materials, apply colors and textures, and animate opacity, glossiness, or self-illumination. |
+| Lights | `get_light`, `set_light` | Inspect and change light activation, color, and intensity. |
+| Avatars | `get_avatar_info`, `get_avatar_capabilities`, `get_skin_bones`, `get_animation_clips`, `set_clip_speed`, `set_clip_loop_count` | Inspect avatars, bones, components, and clips, then set clip speed and looping. |
+| Morphs | `list_morphs`, `get_morph_weight`, `set_morph_weight` | List, read, and animate morph weights on compatible props and avatars. |
+| Rendering | `get_render_settings`, `render_video` | Read the output resolution and start video rendering after explicit confirmation. |
+| Mocap and networking | `get_mocap_status`, `get_network_capabilities` | Diagnose the mocap manager and native TCP/UDP availability. |
+
+These tools can be used to:
 
 - inspect, select, transform, show, and remove scene objects;
 - create official iClone primitives, import assets, and save projects;
@@ -69,8 +91,7 @@ The server exposes MCP tools to:
 - inspect the current render size and start a render only after explicit confirmation;
 - inspect iClone mocap state and native TCP/UDP availability without opening external connections.
 
-The plugin targets iClone 8. It intentionally avoids iClone 7-only APIs,
-including the motion-bone APIs removed in iClone 8.
+The plugin targets iClone 8 exclusively through its official Python API.
 
 ## Example instructions for an agent
 
