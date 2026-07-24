@@ -83,9 +83,13 @@ forth.
    restore the stored anchor with `set_transform` at the start frame. Do not
    move the avatar to a new conversation point and do not clear the avatar's
    static placement.
-7. Apply motions with `load_motion` at the requested start frame. Use different
-   but compatible Talk/Explain motions for two speakers when available so they
-   do not mirror each other mechanically.
+7. Apply motions at the requested start frame. For iClone Motion Puppet preset
+   files such as `Base Motion\Talk\*.iMotion`, select the avatar with
+   `select_object` and load the file with `import_asset`; this reproduces the
+   iClone Content Manager behavior and is the verified path for these presets.
+   Use `load_motion` for externally loadable motion clips when it produces a
+   visible result. Use different but compatible Talk/Explain motions for two
+   speakers when available so they do not mirror each other mechanically.
 8. Use `set_clip_speed` and `set_clip_loop_count` only after checking the clip
    duration and requested frame range. Do not assume that loop count 0 means
    infinite playback.
