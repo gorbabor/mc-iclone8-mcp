@@ -17,7 +17,8 @@ Use this skill to turn a 3D objective into a deliberate iClone 8 operation. The 
 6. Never claim that a render, animation, or color change succeeded without checking the resulting state.
 7. Use a real scene camera for animation. The iClone Preview Camera cannot be transform-animated.
 8. For humanoid movement, prefer native iClone skeletal motions over root-transform displacement.
-9. Keep the MCP server local. Do not expose port 8766 externally or invent TCP/UDP device protocols.
+9. Preserve each avatar's existing anchor position. Removing an animation must never become an unintended relocation.
+10. Keep the MCP server local. Do not expose port 8766 externally or invent TCP/UDP device protocols.
 
 ## Tool selection map
 
@@ -74,17 +75,22 @@ forth.
    - disagreement/reaction: `02_Argue 1.iMotion`, `02_Argue 2.iMotion`;
    - subtle behavior: `Base Motion\Idle\01_Natural.iMotion`,
      `02_Natural.iMotion`, `01_Look Around.iMotion`.
-5. If earlier experimentation created root transform keys that merely move the
-   avatar, stop the timeline and clear only those keys with
-   `clear_transform_keys` and the required confirmation token. Do this before
-   loading the skeletal motion, and explain the cleanup.
-6. Apply motions with `load_motion` at the requested start frame. Use different
+5. Before changing animation, read and store each avatar's position and scale at
+   the requested start frame. Treat these values as the immutable scene anchor.
+6. If earlier experimentation created root transform keys that merely move the
+   avatar, stop the timeline and clear those object-animation keys with
+   `clear_transform_keys` and the required confirmation token. Immediately
+   restore the stored anchor with `set_transform` at the start frame. Do not
+   move the avatar to a new conversation point and do not clear the avatar's
+   static placement.
+7. Apply motions with `load_motion` at the requested start frame. Use different
    but compatible Talk/Explain motions for two speakers when available so they
    do not mirror each other mechanically.
-7. Use `set_clip_speed` and `set_clip_loop_count` only after checking the clip
+8. Use `set_clip_speed` and `set_clip_loop_count` only after checking the clip
    duration and requested frame range. Do not assume that loop count 0 means
    infinite playback.
-8. Verify the result with `get_animation_clips` and `get_timeline`, then play the
+9. Verify the result with `get_animation_clips`, `get_transform` at the start
+   frame, and `get_timeline`, then play the
    requested range. If only transform tools are available and no suitable
    motion file exists, clearly label root motion as a fallback, keep it subtle,
    and do not describe it as arm/hand/body gesture animation.
