@@ -81,7 +81,8 @@ def set_path_offset(args):
     frame = int(args.get("frame", RLPy.RGlobal.GetFps().GetFrameIndex(RLPy.RGlobal.GetTime())))
     value = args.get("position", {})
     rotation = args.get("rotation_degrees", {})
-    matrix = RLPy.RMatrix3().FromEulerAngle(
+    matrix = RLPy.RMatrix3()
+    matrix.FromEulerAngle(
         RLPy.EEulerOrder_XYZ,
         math.radians(rotation.get("x", 0)),
         math.radians(rotation.get("y", 0)),

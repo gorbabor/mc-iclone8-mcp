@@ -43,7 +43,8 @@ def set_transform(args):
         scale = RLPy.RVector3(value.get("x", scale.x), value.get("y", scale.y), value.get("z", scale.z))
     if "rotation_degrees" in args:
         value = args["rotation_degrees"]
-        matrix = RLPy.RMatrix3().FromEulerAngle(
+        matrix = RLPy.RMatrix3()
+        matrix.FromEulerAngle(
             RLPy.EEulerOrder_XYZ,
             math.radians(value.get("x", 0)),
             math.radians(value.get("y", 0)),

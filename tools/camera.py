@@ -84,7 +84,8 @@ def set_camera_transform(args):
     if "rotation_degrees" in args:
         import math
         value = args["rotation_degrees"]
-        matrix = RLPy.RMatrix3().FromEulerAngle(RLPy.EEulerOrder_XYZ, math.radians(value.get("x", 0)), math.radians(value.get("y", 0)), math.radians(value.get("z", 0)))
+        matrix = RLPy.RMatrix3()
+        matrix.FromEulerAngle(RLPy.EEulerOrder_XYZ, math.radians(value.get("x", 0)), math.radians(value.get("y", 0)), math.radians(value.get("z", 0)))
         rotation = RLPy.RQuaternion()
         rotation.FromRotationMatrix(matrix)
     result = control.SetValue(RLPy.RGlobal.GetTime(), RLPy.RTransform(scale, rotation, position))
