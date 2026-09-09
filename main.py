@@ -61,12 +61,18 @@ def start_server():
     with _lock:
         if _server and _server.running:
             return "http://%s:%d/mcp" % (_server.host, _server.port)
-        from dispatch import start as start_dispatch
-        from mcp_handler import MCPHandler
-        from server import MCPServer
-        start_dispatch()
+        # Reload the infrastructure modules too (not just tools/*), so editing
+        # dispatch/mcp_handler/server on disk takes effect on the next Start
+        # without a full iClone restart.
+        import dispatch
+        import mcp_handler
+        import server
+        importlib.reload(dispatch)
+        importlib.reload(mcp_handler)
+        importlib.reload(server)
+        dispatch.start()
         config = _config()["server"]
-        candidate = MCPServer(MCPHandler(_tool_registry()), config["host"], config["port"])
+        candidate = server.MCPServer(mcp_handler.MCPHandler(_tool_registry()), config["host"], config["port"])
         candidate.start()
         _server = candidate
         return "http://%s:%d/mcp" % (candidate.host, candidate.port)
@@ -76,6 +82,13 @@ def stop_server():
     global _server
     with _lock:
         candidate, _server = _server, None
+        # Stop the dispatch timer on the current module before any reload, so a
+        # subsequent Start does not leave an orphaned RPyTimer running.
+        try:
+            import dispatch
+            dispatch.stop()
+        except Exception as error:
+            print("mc-iclone8-mcp dispatch stop error: %s" % error)
         if candidate:
             candidate.stop()
             return True
