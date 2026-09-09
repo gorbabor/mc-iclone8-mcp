@@ -45,11 +45,11 @@ def set_morph_weight(args):
 
 
 def register(registry):
-    target = {"name": {"type": "string", "description": "Objet prop ou avatar (par défaut : premier objet sélectionné)."}}
-    registry["list_morphs"] = {"handler": list_morphs, "main_thread": True, "description": "Liste les morphs disponibles, classés par mesh.", "inputSchema": {"type": "object", "properties": target}}
+    target = {"name": {"type": "string", "description": "Prop or avatar object (default: first selected object)."}}
+    registry["list_morphs"] = {"handler": list_morphs, "main_thread": True, "description": "List available morphs, grouped by mesh.", "inputSchema": {"type": "object", "properties": target}}
     weight = dict(target)
     weight.update({"mesh": {"type": "string"}, "morph": {"type": "string"}})
-    registry["get_morph_weight"] = {"handler": get_morph_weight, "main_thread": True, "description": "Lit le poids du morph à l’instant courant.", "inputSchema": {"type": "object", "properties": weight, "required": ["mesh", "morph"]}}
+    registry["get_morph_weight"] = {"handler": get_morph_weight, "main_thread": True, "description": "Read the morph weight at the current time.", "inputSchema": {"type": "object", "properties": weight, "required": ["mesh", "morph"]}}
     set_weight = dict(weight)
     set_weight["weight"] = {"type": "number"}
-    registry["set_morph_weight"] = {"handler": set_morph_weight, "main_thread": True, "description": "Pose une clé de poids de morph à l’instant courant.", "inputSchema": {"type": "object", "properties": set_weight, "required": ["mesh", "morph", "weight"]}}
+    registry["set_morph_weight"] = {"handler": set_morph_weight, "main_thread": True, "description": "Add a morph weight key at the current time.", "inputSchema": {"type": "object", "properties": set_weight, "required": ["mesh", "morph", "weight"]}}

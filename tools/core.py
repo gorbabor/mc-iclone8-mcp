@@ -23,6 +23,6 @@ def _runtime_diagnostics(_args):
 
 
 def register(registry):
-    registry["get_api_version"] = {"handler": _api_version, "description": "Retourne la version du serveur et la cible iClone 8.", "inputSchema": {"type": "object", "properties": {}}}
-    registry["ping_iclone"] = {"handler": _ping, "description": "Vérifie que le pont MCP répond.", "inputSchema": {"type": "object", "properties": {}}}
-    registry["get_runtime_diagnostics"] = {"handler": _runtime_diagnostics, "main_thread": True, "description": "Retourne les capacités RLPy réelles utiles au diagnostic, sans modifier la scène.", "inputSchema": {"type": "object", "properties": {}}}
+    registry["get_api_version"] = {"handler": _api_version, "description": "Return the server version and iClone 8 target.", "inputSchema": {"type": "object", "properties": {}}}
+    registry["ping_iclone"] = {"handler": _ping, "description": "Check that the MCP bridge responds.", "inputSchema": {"type": "object", "properties": {}}}
+    registry["get_runtime_diagnostics"] = {"handler": _runtime_diagnostics, "main_thread": True, "description": "Return the real RLPy capabilities useful for diagnostics, without modifying the scene.", "inputSchema": {"type": "object", "properties": {}}}
