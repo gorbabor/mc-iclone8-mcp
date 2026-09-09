@@ -22,7 +22,16 @@ def _object_summary(obj):
 
 
 def list_objects(args):
-    object_type = args.get("type", "object").lower()
+    requested = args.get("type")
+    if requested is None:
+        # No type given: enumerate every known type, de-duplicated by object id
+        # (subtype enums such as the light variants can overlap).
+        seen = {}
+        for enum in _TYPES.values():
+            for obj in RLPy.RScene.FindObjects(enum):
+                seen[obj.GetID()] = obj
+        return {"objects": [_object_summary(obj) for obj in seen.values()]}
+    object_type = requested.lower()
     if object_type not in _TYPES:
         raise ValueError("Unsupported object type: %s" % object_type)
     return {"objects": [_object_summary(obj) for obj in RLPy.RScene.FindObjects(_TYPES[object_type])]}
@@ -48,6 +57,8 @@ def set_visibility(args):
 
 
 def delete_object(args):
+    if args.get("confirm") != "DELETE_OBJECT":
+        raise ValueError("confirm must be DELETE_OBJECT")
     obj = find_by_name(args["name"])
     result = RLPy.RScene.RemoveObject(obj)
     if result != RLPy.RStatus.Success:
@@ -117,11 +128,11 @@ def set_static(args):
 
 
 def register(registry):
-    registry["list_objects"] = {"handler": list_objects, "main_thread": True, "description": "Liste les objets de la scène iClone 8.", "inputSchema": {"type": "object", "properties": {"type": {"type": "string", "enum": list(_TYPES)}}}}
+    registry["list_objects"] = {"handler": list_objects, "main_thread": True, "description": "Liste les objets de la scène iClone 8. Sans 'type', retourne tous les types.", "inputSchema": {"type": "object", "properties": {"type": {"type": "string", "enum": list(_TYPES)}}}}
     registry["get_selection"] = {"handler": get_selection, "main_thread": True, "description": "Retourne la sélection active dans iClone.", "inputSchema": {"type": "object", "properties": {}}}
     registry["select_object"] = {"handler": select_object, "main_thread": True, "description": "Sélectionne un objet de la scène par son nom.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}}, "required": ["name"]}}
     registry["set_visibility"] = {"handler": set_visibility, "main_thread": True, "description": "Affiche ou masque un objet à l'instant courant.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}, "visible": {"type": "boolean"}}, "required": ["name", "visible"]}}
-    registry["delete_object"] = {"handler": delete_object, "main_thread": True, "description": "Supprime définitivement un objet de la scène.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}}, "required": ["name"]}}
+    registry["delete_object"] = {"handler": delete_object, "main_thread": True, "description": "Supprime définitivement un objet de la scène. Action destructive : confirm doit valoir DELETE_OBJECT.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}, "confirm": {"type": "string", "enum": ["DELETE_OBJECT"]}}, "required": ["name", "confirm"]}}
     registry["clone_object"] = {"handler": clone_object, "main_thread": True, "description": "Clone un objet de scène, avec un nouveau nom optionnel.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}, "new_name": {"type": "string"}}, "required": ["name"]}}
     registry["link_object"] = {"handler": link_object, "main_thread": True, "description": "Lie un objet à une cible à la frame courante.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}, "target_name": {"type": "string"}, "alignment": {"type": "string", "enum": ["none", "position", "position_and_rotation"]}}, "required": ["name", "target_name"]}}
     registry["unlink_object"] = {"handler": unlink_object, "main_thread": True, "description": "Dissocie un objet de sa cible à la frame courante.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string"}}, "required": ["name"]}}

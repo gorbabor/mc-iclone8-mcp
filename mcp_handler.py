@@ -6,8 +6,10 @@ class MCPHandler:
         self.tools = tools
 
     def __call__(self, body):
+        request_id = None
         try:
             request = json.loads(body)
+            request_id = request.get("id")
             method = request.get("method")
             if method == "initialize":
                 result = {"protocolVersion": "2024-11-05", "capabilities": {"tools": {}}, "serverInfo": {"name": "mc-iclone8-mcp", "version": "0.1.0"}}
@@ -30,6 +32,7 @@ class MCPHandler:
                 result = {}
             else:
                 raise ValueError("Unsupported method: %s" % method)
-            return json.dumps({"jsonrpc": "2.0", "id": request.get("id"), "result": result}, ensure_ascii=False)
+            return json.dumps({"jsonrpc": "2.0", "id": request_id, "result": result}, ensure_ascii=False)
         except Exception as error:
-            return json.dumps({"jsonrpc": "2.0", "id": None, "error": {"code": -32603, "message": str(error)}}, ensure_ascii=False)
+            # Echo the request id so clients can match the error to its request.
+            return json.dumps({"jsonrpc": "2.0", "id": request_id, "error": {"code": -32603, "message": str(error)}}, ensure_ascii=False)
