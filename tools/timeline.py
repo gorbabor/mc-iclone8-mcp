@@ -77,9 +77,9 @@ def clear_scene_animations(args):
 
 
 def register(registry):
-    registry["get_timeline"] = {"handler": get_timeline, "main_thread": True, "description": "Retourne FPS, lecture et bornes de la timeline.", "inputSchema": {"type": "object", "properties": {}}}
-    registry["set_timeline"] = {"handler": set_timeline, "main_thread": True, "description": "Place la tête de lecture par frame ou millisecondes.", "inputSchema": {"type": "object", "properties": {"frame": {"type": "integer"}, "milliseconds": {"type": "integer"}}}}
-    registry["play_timeline"] = {"handler": play, "main_thread": True, "description": "Lance la lecture de la timeline.", "inputSchema": {"type": "object", "properties": {"start_frame": {"type": "integer"}, "end_frame": {"type": "integer"}}}}
-    registry["pause_timeline"] = {"handler": pause, "main_thread": True, "description": "Met la timeline en pause.", "inputSchema": {"type": "object", "properties": {}}}
-    registry["stop_timeline"] = {"handler": stop, "main_thread": True, "description": "Arrête la timeline.", "inputSchema": {"type": "object", "properties": {}}}
-    registry["clear_scene_animations"] = {"handler": clear_scene_animations, "main_thread": True, "description": "Supprime toutes les animations des objets pris en charge dans la scène. Action destructive.", "inputSchema": {"type": "object", "properties": {"confirm": {"type": "string", "enum": ["DELETE_ALL_SCENE_ANIMATIONS"]}}, "required": ["confirm"]}}
+    registry["get_timeline"] = {"handler": get_timeline, "main_thread": True, "description": "Return the timeline's FPS, playback state and bounds.", "inputSchema": {"type": "object", "properties": {}}}
+    registry["set_timeline"] = {"handler": set_timeline, "main_thread": True, "description": "Set the playhead by frame or milliseconds.", "inputSchema": {"type": "object", "properties": {"frame": {"type": "integer"}, "milliseconds": {"type": "integer"}}}}
+    registry["play_timeline"] = {"handler": play, "main_thread": True, "description": "Start timeline playback.", "inputSchema": {"type": "object", "properties": {"start_frame": {"type": "integer"}, "end_frame": {"type": "integer"}}}}
+    registry["pause_timeline"] = {"handler": pause, "main_thread": True, "description": "Pause the timeline.", "inputSchema": {"type": "object", "properties": {}}}
+    registry["stop_timeline"] = {"handler": stop, "main_thread": True, "description": "Stop the timeline.", "inputSchema": {"type": "object", "properties": {}}}
+    registry["clear_scene_animations"] = {"handler": clear_scene_animations, "main_thread": True, "description": "Remove all animation from supported objects in the scene. Destructive action.", "inputSchema": {"type": "object", "properties": {"confirm": {"type": "string", "enum": ["DELETE_ALL_SCENE_ANIMATIONS"]}}, "required": ["confirm"]}}

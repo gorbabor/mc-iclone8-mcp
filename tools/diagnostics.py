@@ -56,6 +56,6 @@ def list_content_files(args):
 
 
 def register(registry):
-    registry["get_application_info"] = {"handler": get_application_info, "main_thread": True, "description": "Retourne les informations de version et de chemins de l'installation iClone 8.", "inputSchema": {"type": "object", "properties": {}}}
-    registry["list_content_folders"] = {"handler": list_content_folders, "main_thread": True, "description": "Liste les sous-dossiers de contenu iClone depuis le Smart Content Manager API.", "inputSchema": {"type": "object", "properties": {"parent": {"type": "string"}}}}
-    registry["list_content_files"] = {"handler": list_content_files, "main_thread": True, "description": "Liste les fichiers de contenu iClone depuis le Smart Content Manager API.", "inputSchema": {"type": "object", "properties": {"parent": {"type": "string"}}}}
+    registry["get_application_info"] = {"handler": get_application_info, "main_thread": True, "description": "Return version and path information for the iClone 8 installation.", "inputSchema": {"type": "object", "properties": {}}}
+    registry["list_content_folders"] = {"handler": list_content_folders, "main_thread": True, "description": "List iClone content subfolders from the Smart Content Manager API.", "inputSchema": {"type": "object", "properties": {"parent": {"type": "string"}}}}
+    registry["list_content_files"] = {"handler": list_content_files, "main_thread": True, "description": "List iClone content files from the Smart Content Manager API.", "inputSchema": {"type": "object", "properties": {"parent": {"type": "string"}}}}

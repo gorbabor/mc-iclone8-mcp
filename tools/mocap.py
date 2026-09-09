@@ -19,5 +19,5 @@ def get_network_capabilities(_args):
 
 
 def register(registry):
-    registry["get_mocap_status"] = {"handler": get_mocap_status, "main_thread": True, "description": "Vérifie si le gestionnaire de motion capture d’iClone est disponible et en cours d’exécution.", "inputSchema": {"type": "object", "properties": {}}}
-    registry["get_network_capabilities"] = {"handler": get_network_capabilities, "main_thread": True, "description": "Diagnostique la disponibilité des clients TCP et UDP natifs d’iClone 8, sans ouvrir de connexion.", "inputSchema": {"type": "object", "properties": {}}}
+    registry["get_mocap_status"] = {"handler": get_mocap_status, "main_thread": True, "description": "Check whether iClone's motion capture manager is available and running.", "inputSchema": {"type": "object", "properties": {}}}
+    registry["get_network_capabilities"] = {"handler": get_network_capabilities, "main_thread": True, "description": "Diagnose availability of iClone 8's native TCP and UDP clients, without opening a connection.", "inputSchema": {"type": "object", "properties": {}}}

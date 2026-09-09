@@ -22,5 +22,5 @@ def render_video(args):
 
 
 def register(registry):
-    registry["get_render_settings"] = {"handler": get_render_settings, "main_thread": True, "description": "Lit les dimensions des paramètres de rendu actuels d'iClone.", "inputSchema": {"type": "object", "properties": {}}}
-    registry["render_video"] = {"handler": render_video, "main_thread": True, "description": "Lance le rendu vidéo avec les réglages actuels du projet iClone. Requiert une confirmation explicite.", "inputSchema": {"type": "object", "properties": {"confirm": {"type": "string", "description": "Valeur exacte : RENDER_VIDEO_WITH_CURRENT_SETTINGS"}}, "required": ["confirm"]}}
+    registry["get_render_settings"] = {"handler": get_render_settings, "main_thread": True, "description": "Read the dimensions from iClone's current render settings.", "inputSchema": {"type": "object", "properties": {}}}
+    registry["render_video"] = {"handler": render_video, "main_thread": True, "description": "Start video rendering with iClone's current project settings. Requires explicit confirmation.", "inputSchema": {"type": "object", "properties": {"confirm": {"type": "string", "description": "Exact value: RENDER_VIDEO_WITH_CURRENT_SETTINGS"}}, "required": ["confirm"]}}
