@@ -43,12 +43,15 @@ def set_transform(args):
         scale = RLPy.RVector3(value.get("x", scale.x), value.get("y", scale.y), value.get("z", scale.z))
     if "rotation_degrees" in args:
         value = args["rotation_degrees"]
+        # RMatrix3.FromEulerAngle returns a tuple (RMatrix3, RStatus); the
+        # matrix is at index 0. Passing the whole tuple to FromRotationMatrix
+        # raised "argument 2 of type 'RL::CMatrix3< float > const &'".
         matrix = RLPy.RMatrix3().FromEulerAngle(
             RLPy.EEulerOrder_XYZ,
             math.radians(value.get("x", 0)),
             math.radians(value.get("y", 0)),
             math.radians(value.get("z", 0)),
-        )
+        )[0]
         rotation = RLPy.RQuaternion()
         rotation.FromRotationMatrix(matrix)
     obj.GetControl("Transform").SetValue(RLPy.RGlobal.GetTime(), RLPy.RTransform(scale, rotation, pos))
