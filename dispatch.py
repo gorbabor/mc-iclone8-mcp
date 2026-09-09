@@ -1,5 +1,6 @@
 import queue
 import threading
+import time
 
 import RLPy
 
@@ -8,22 +9,31 @@ _queue = queue.Queue()
 _timer = None
 _callback = None
 
+# Drain as many queued jobs as possible per timer tick, bounded by this
+# wall-clock budget so a large batch never freezes iClone's UI thread for long.
+# Remaining jobs run on the next tick. At least one job always runs per tick.
+_TICK_BUDGET_SECONDS = 0.020
+
 
 class _Callback(RLPy.RPyTimerCallback):
     def __init__(self):
         RLPy.RPyTimerCallback.__init__(self)
 
     def Timeout(self):
-        try:
-            function, done, result = _queue.get_nowait()
-        except queue.Empty:
-            return
-        try:
-            result["value"] = function()
-        except Exception as error:
-            result["error"] = error
-        finally:
-            done.set()
+        deadline = time.time() + _TICK_BUDGET_SECONDS
+        while True:
+            try:
+                function, done, result = _queue.get_nowait()
+            except queue.Empty:
+                return
+            try:
+                result["value"] = function()
+            except Exception as error:
+                result["error"] = error
+            finally:
+                done.set()
+            if time.time() >= deadline:
+                return
 
 
 def start():
