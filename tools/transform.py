@@ -6,12 +6,26 @@ from tools.objects import find_by_name
 
 def get_transform(args):
     transform = find_by_name(args["name"]).LocalTransform()
-    position, scale = transform.T(), transform.S()
-    return {
+    position, scale, rotation = transform.T(), transform.S(), transform.R()
+    result = {
         "name": args["name"],
         "position": {"x": position.x, "y": position.y, "z": position.z},
         "scale": {"x": scale.x, "y": scale.y, "z": scale.z},
+        "rotation_quaternion": {"x": rotation.x, "y": rotation.y, "z": rotation.z, "w": rotation.w},
     }
+    # Best-effort Euler readback so a rotation set via set_transform can be
+    # verified. ToEulerAngle returns a tuple of radians indexed [0],[1],[2].
+    try:
+        euler = rotation.ToRotationMatrix().ToEulerAngle(RLPy.EEulerOrder_XYZ, 0.0, 0.0, 0.0)
+        result["rotation_degrees"] = {
+            "x": math.degrees(euler[0]),
+            "y": math.degrees(euler[1]),
+            "z": math.degrees(euler[2]),
+        }
+    except Exception as error:
+        result["rotation_degrees"] = None
+        result["rotation_note"] = "Euler conversion unavailable: %s" % error
+    return result
 
 
 def get_object_bounds(args):
@@ -43,12 +57,15 @@ def set_transform(args):
         scale = RLPy.RVector3(value.get("x", scale.x), value.get("y", scale.y), value.get("z", scale.z))
     if "rotation_degrees" in args:
         value = args["rotation_degrees"]
+        # RMatrix3.FromEulerAngle returns a tuple (RMatrix3, RStatus); the
+        # matrix is at index 0. Passing the whole tuple to FromRotationMatrix
+        # raised "argument 2 of type 'RL::CMatrix3< float > const &'".
         matrix = RLPy.RMatrix3().FromEulerAngle(
             RLPy.EEulerOrder_XYZ,
             math.radians(value.get("x", 0)),
             math.radians(value.get("y", 0)),
             math.radians(value.get("z", 0)),
-        )
+        )[0]
         rotation = RLPy.RQuaternion()
         rotation.FromRotationMatrix(matrix)
     obj.GetControl("Transform").SetValue(RLPy.RGlobal.GetTime(), RLPy.RTransform(scale, rotation, pos))
