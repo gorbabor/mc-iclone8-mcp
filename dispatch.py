@@ -38,6 +38,18 @@ def start():
     _timer.Start()
 
 
+def stop():
+    # Stop the timer and clear globals so the module can be reloaded and
+    # restarted cleanly without leaking a running RPyTimer.
+    global _timer, _callback
+    timer, _timer, _callback = _timer, None, None
+    if timer is not None:
+        try:
+            timer.Stop()
+        except Exception:
+            pass
+
+
 def run(function, timeout=120):
     if _timer is None:
         return function()
