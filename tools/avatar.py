@@ -67,15 +67,31 @@ def get_animation_clips(args):
     skeleton = avatar.GetSkeletonComponent()
     if skeleton is None:
         raise RuntimeError("Avatar has no skeleton component")
+    fps = RLPy.RGlobal.GetFps()
     clips = []
     for index in range(skeleton.GetClipCount()):
         clip = skeleton.GetClip(index)
-        clips.append({
+        info = {
             "index": index,
             "type": rl_string(clip.GetType()),
             "speed": clip.GetSpeed(),
             "loop_count": clip.GetLoopCount(),
-        })
+        }
+        # Clip name and length make a loaded motion verifiable (e.g. confirm a
+        # motion applied and how long it is). Both are best-effort across builds.
+        try:
+            info["name"] = clip.GetName()
+        except Exception:
+            pass
+        for label, method_name in (("length_frames", "GetClipLength"), ("start_frame", "GetClipTime")):
+            method = getattr(clip, method_name, None)
+            if method is None:
+                continue
+            try:
+                info[label] = fps.GetFrameIndex(method())
+            except Exception:
+                pass
+        clips.append(info)
     return {"avatar": avatar.GetName(), "clip_count": len(clips), "clips": clips}
 
 
